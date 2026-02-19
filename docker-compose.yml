@@ -1,0 +1,73 @@
+services:
+  # ===== API =====
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: onepiece-api
+    ports:
+      - "${APP_PORT:-8080}:8080"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=postgres
+      - REDIS_HOST=redis
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - onepiece-network
+
+  # ===== POSTGRESQL =====
+  postgres:
+    image: postgres:16-alpine
+    container_name: onepiece-postgres
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER:-onepiece}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-onepiece_secret}
+      POSTGRES_DB: ${DB_NAME:-onepiece_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${DB_USER:-onepiece} -d ${DB_NAME:-onepiece_db}",
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - onepiece-network
+
+  # ===== REDIS =====
+  redis:
+    image: redis:7-alpine
+    container_name: onepiece-redis
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - onepiece-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  onepiece-network:
+    driver: bridge
