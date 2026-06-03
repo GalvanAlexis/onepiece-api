@@ -1,5 +1,5 @@
 ---
-estado: En Progreso
+estado: Hecho
 prioridad: Alta
 creado: 2026-06-03
 ---
