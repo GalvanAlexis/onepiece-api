@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "onepiece-api",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

@@ -4,7 +4,7 @@ MAIN_PATH=cmd/api/main.go
 MIGRATE_PATH=migrations
 DB_URL=postgres://onepiece:onepiece_secret@localhost:5432/onepiece_db?sslmode=disable
 
-.PHONY: all build run clean docker-up docker-down migrate-up migrate-down sqlc-gen lint test
+.PHONY: all build run clean docker-up docker-down migrate-up migrate-down sqlc-gen lint test test-api
 
 ## Build & Run
 all: build
@@ -58,6 +58,11 @@ sqlc-gen:
 test:
 	@echo ">> Running tests..."
 	go test ./... -v -race
+
+test-api:
+	@echo ">> Running API tests via Bruno..."
+	@echo ">> Note: Bruno runs in Safe Mode. If you use external npm packages or filesystem access, append --sandbox=developer"
+	npx @usebruno/cli run bruno --env local
 
 lint:
 	@echo ">> Linting..."

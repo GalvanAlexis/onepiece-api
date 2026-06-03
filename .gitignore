@@ -28,3 +28,6 @@ docs/
 
 # Air (live reload)
 tmp/
+
+# Bruno Secrets
+bruno/environments/*.secret.bru

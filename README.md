@@ -77,7 +77,8 @@ make migrate-create name=<nombre>  # Crea una nueva migración
 
 make sqlc-gen       # Genera el código Go a partir de las queries SQL
 
-make test           # Corre la suite de tests con -race
+make test           # Corre la suite de tests unitarios de Go con -race
+make test-api       # Corre los tests automatizados de la API usando Bruno CLI
 make lint           # Corre golangci-lint
 make tidy           # Ejecuta go mod tidy
 ```
@@ -104,6 +105,7 @@ onepiece-api/
 ├── seeds/              # Datos iniciales de One Piece
 ├── Documentacion/      # Documentación interna del proyecto
 ├── ISSUES/             # Tracker local de issues y tareas
+├── bruno/              # Colección de endpoints y tests de la API (Bruno)
 ├── docker-compose.yml
 ├── Makefile
 └── sqlc.yaml
@@ -205,6 +207,12 @@ Handler → UseCase → Repository → Database
 
 - [`Documentacion/`](./Documentacion/) — Documentación técnica del proyecto
 - [`ISSUES/`](./ISSUES/) — Tracker local de tareas e issues
+
+### 🧪 Pruebas de API con Bruno
+Usamos [Bruno](https://www.usebruno.com/) como cliente y runner de tests offline-first. La colección completa se encuentra en la carpeta `bruno/`.
+- Para utilizar la colección gráficamente, descarga la App de Bruno y abre el directorio `bruno/`.
+- Para correr los tests desde la terminal, requiere Node.js: `npx @usebruno/cli run bruno --env local` o usar el atajo `make test-api`.
+- Por defecto Bruno v3.0.0 corre en Safe Mode.
 
 ---
 
